@@ -1,7 +1,5 @@
-# Stage 1: Build PHP & Node Assets together
-FROM php:8.3-fpm-alpine AS builder
+FROM php:8.4-fpm-alpine
 
-# Install system dependencies, PHP extensions, AND Node.js/npm
 RUN apk add --no-cache \
     git \
     unzip \
@@ -9,32 +7,27 @@ RUN apk add --no-cache \
     libzip-dev \
     libpng-dev \
     nodejs \
-    npm
+    npm \
+    nginx \
+    supervisor
 
 RUN docker-php-ext-install pdo_mysql bcmath zip
 
-# Get Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 WORKDIR /var/www
 COPY . .
 
-# 1. Install PHP dependencies
 RUN composer install --no-dev --optimize-autoloader
-
-# 2. Install Node dependencies and build assets
-# Now 'php artisan' will work during 'npm run build'
 RUN npm ci && npm run build
 
-# Stage 2: Final Production Image
-FROM php:8.3-fpm-alpine
-WORKDIR /var/www
+RUN chown -R www-data:www-data /var/www/storage /var/www/bootstrap/cache /var/www/database && \
+    chmod -R 775 /var/www/storage /var/www/bootstrap/cache /var/www/database
 
-# Copy the entire built application from the builder stage
-COPY --from=builder /var/www /var/www
+RUN php artisan migrate --force
 
-# Set permissions
-RUN chown -R www-data:www-data /var/www/storage /var/www/bootstrap/cache
+COPY docker/nginx.conf /etc/nginx/http.d/default.conf
+COPY docker/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
-EXPOSE 9000
-CMD ["php-fpm"]
+EXPOSE 80
+CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
