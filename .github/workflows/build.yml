@@ -10,7 +10,7 @@ on:
       - 'v*'
 
 env:
-  REGISTRY: ${{ secrets.REGISTRY }}
+  REGISTRY: registry.citadelhosts.com
   IMAGE_NAME: ${{ secrets.IMAGE_NAME }}
 
 jobs:
