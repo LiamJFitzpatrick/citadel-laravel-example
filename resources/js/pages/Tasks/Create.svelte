@@ -43,6 +43,7 @@
                     id="title"
                     name="title"
                     class="mt-1 block w-full rounded-md border border-[#e3e3e0] px-3 py-2 dark:border-[#3E3E3A] dark:bg-[#0a0a0a] dark:text-white"
+                    placeholder="Give the task a great tite."
                     required
                 />
             </div>
