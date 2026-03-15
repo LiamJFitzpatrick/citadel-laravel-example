@@ -21,10 +21,10 @@ COPY . .
 RUN composer install --no-dev --optimize-autoloader
 RUN npm ci && npm run build
 
+RUN php artisan migrate --force
+
 RUN chown -R www-data:www-data /var/www/storage /var/www/bootstrap/cache /var/www/database && \
     chmod -R 775 /var/www/storage /var/www/bootstrap/cache /var/www/database
-
-RUN php artisan migrate --force
 
 COPY docker/nginx.conf /etc/nginx/http.d/default.conf
 COPY docker/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
