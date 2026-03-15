@@ -36,7 +36,7 @@
                     for="title"
                     class="block text-sm font-medium dark:text-white"
                 >
-                    Title *
+                    Great Task Title *
                 </label>
                 <input
                     type="text"
