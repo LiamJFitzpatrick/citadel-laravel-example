@@ -42,6 +42,7 @@
     <div class="w-full max-w-2xl">
         <div class="mb-8 flex items-center justify-between">
             <h1 class="text-2xl font-semibold dark:text-white">Tasks</h1>
+            <p>Hi Mike! From CitadelHosts.com</p>
             <a
                 href={create.url()}
                 class="rounded-md bg-[#f53003] px-4 py-2 text-sm font-medium text-white hover:bg-[#d62803] dark:bg-[#ff4433] dark:hover:bg-[#e03d2e]"
